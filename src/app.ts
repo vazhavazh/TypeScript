@@ -287,49 +287,85 @@
 //     он возвращает массив строк и чисел,
 //         опишите правильно тип.
 
-function getPromise(): Promise<Array<string | number>> {
-	return new Promise((resolve) => {
-		resolve(["Text", 50]);
-	});
+// function getPromise(): Promise<Array<string | number>> {
+// 	return new Promise((resolve) => {
+// 		resolve(["Text", 50]);
+// 	});
+// }
+// getPromise().then((data) => {
+// 	console.log(data);
+// });
+
+
+// type AllType = {
+// 	name: string;
+// 	position: number;
+// 	color: string;
+// 	weight: number;
+// };
+
+
+// function compare(top: Pick<AllType, 'name' | 'color'>, bottom: Pick<AllType, 'position' | 'weight'>) : AllType  {
+// 	return {
+// 		name: top.name,
+// 		color: top.color,
+// 		position: bottom.position,
+// 		weight: bottom.weight,
+// 	};
+// }
+
+// function merge<T extends object, U extends object>(objA: T, objB: U) {
+// 	return Object.assign(objA, objB);
+// }
+
+
+// class Component<T> {
+// 	constructor(public props: T) {}
+// }
+
+// interface IProps {
+//     title: string;
+// }
+
+
+// class Page extends Component<IProps> {
+// 	pageInfo() {
+// 		console.log(this.props.title);
+// 	}
+// }
+
+interface IDecoration {
+	parent: string;
+	template: string;
 }
-getPromise().then((data) => {
-	console.log(data);
-});
 
+function ControllerDecoration(config: IDecoration) {
+	return function <T extends { new (...args: any[]): { content: string } }>(
+		originalConstructor: T
+	) {
+		return class extends originalConstructor {
+			private element: HTMLElement;
+			private parent: HTMLElement;
+			constructor(...arg: any[]) {
+				super(...arg);
+				this.parent = document.getElementById(config.parent)!;
+				this.element = document.createElement(config.template);
 
-type AllType = {
-	name: string;
-	position: number;
-	color: string;
-	weight: number;
-};
+				this.element.innerHTML = this.content;
 
-
-function compare(top: Pick<AllType, 'name' | 'color'>, bottom: Pick<AllType, 'position' | 'weight'>) : AllType  {
-	return {
-		name: top.name,
-		color: top.color,
-		position: bottom.position,
-		weight: bottom.weight,
+				this.parent.appendChild(this.element);
+			}
+		};
 	};
 }
 
-function merge<T extends object, U extends object>(objA: T, objB: U) {
-	return Object.assign(objA, objB);
+@ControllerDecoration({
+	parent: "app",
+	template: "H1",
+})
+class Controller {
+	public content = "My custom controller";
 }
 
+const controller = new Controller();
 
-class Component<T> {
-	constructor(public props: T) {}
-}
-
-interface IProps {
-    title: string;
-}
-
-
-class Page extends Component<IProps> {
-	pageInfo() {
-		console.log(this.props.title);
-	}
-}
