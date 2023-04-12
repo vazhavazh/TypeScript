@@ -5,29 +5,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-function ControllerDecoration(config) {
-    return function (originalConstructor) {
-        return class extends originalConstructor {
-            constructor(...arg) {
-                super(...arg);
-                this.parent = document.getElementById(config.parent);
-                this.element = document.createElement(config.template);
-                this.element.innerHTML = this.content;
-                this.parent.appendChild(this.element);
-            }
-        };
-    };
+function ShowParams(target, name, descriptor) {
+    console.log("target", target);
+    console.log("name", name);
+    console.log("descriptor", descriptor);
 }
-let Controller = class Controller {
+class Notifier {
     constructor() {
-        this.content = "My custom controller";
+        this.content = "Message in class";
     }
-};
-Controller = __decorate([
-    ControllerDecoration({
-        parent: "app",
-        template: "H1",
-    })
-], Controller);
-const controller = new Controller();
+    showMessage() {
+        console.log(this.content);
+    }
+}
+__decorate([
+    ShowParams
+], Notifier.prototype, "showMessage", null);
+const notifier = new Notifier();
+const showMessage = notifier.showMessage;
+notifier.showMessage();
+showMessage();
 //# sourceMappingURL=app.js.map

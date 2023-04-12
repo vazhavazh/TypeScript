@@ -296,14 +296,12 @@
 // 	console.log(data);
 // });
 
-
 // type AllType = {
 // 	name: string;
 // 	position: number;
 // 	color: string;
 // 	weight: number;
 // };
-
 
 // function compare(top: Pick<AllType, 'name' | 'color'>, bottom: Pick<AllType, 'position' | 'weight'>) : AllType  {
 // 	return {
@@ -318,7 +316,6 @@
 // 	return Object.assign(objA, objB);
 // }
 
-
 // class Component<T> {
 // 	constructor(public props: T) {}
 // }
@@ -327,45 +324,129 @@
 //     title: string;
 // }
 
-
 // class Page extends Component<IProps> {
 // 	pageInfo() {
 // 		console.log(this.props.title);
 // 	}
 // }
 
-interface IDecoration {
-	parent: string;
-	template: string;
+// interface IDecoration {
+// 	parent: string;
+// 	template: string;
+// }
+
+// function ControllerDecoration(config: IDecoration) {
+// 	return function <T extends { new (...args: any[]): { content: string } }>(
+// 		originalConstructor: T
+// 	) {
+// 		return class extends originalConstructor {
+// 			private element: HTMLElement;
+// 			private parent: HTMLElement;
+// 			constructor(...arg: any[]) {
+// 				super(...arg);
+// 				this.parent = document.getElementById(config.parent)!;
+// 				this.element = document.createElement(config.template);
+
+// 				this.element.innerHTML = this.content;
+
+// 				this.parent.appendChild(this.element);
+// 			}
+// 		};
+// 	};
+// }
+
+// @ControllerDecoration({
+// 	parent: "app",
+// 	template: "H1",
+// })
+// class Controller {
+// 	public content = "My custom controller";
+// }
+
+// const controller = new Controller();
+
+// function Logger(logString: string) {
+// 	return function (constructor: Function) {
+// 		console.log(logString);
+// 		console.log(constructor);
+// 	};
+// }
+
+// function AddProperty() {
+// 	return function (constructor: Function) {
+// 		console.log("Add property");
+// 		constructor.prototype.modify = true;
+// 	};
+// }
+
+// @Logger("Logging- Controller")
+// @AddProperty() // вызовется первым так как ближе к  самому класу // порядок наоборот
+// class Controller {
+// 	public id = 1;
+// 	// public modify?: boolean;
+// 	public modify = false  // controller имеет приоритет
+// }
+
+// const controller = new Controller()
+
+// // console.log('Is modify', controller.modify); // 'Is modify true'
+// console.log('Is modify', controller.modify);
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// interface IDecoration {
+// 	parent: string;
+// 	template: string;
+// }
+
+// function ControllerDecoration(config: IDecoration) {
+// 	return function <T extends { new (...arg: any[]): { content: string } }>(
+// 		originalConstructor: T
+// 	) {
+// 		return class extends originalConstructor {
+// 			private element: HTMLElement;
+// 			private parent: HTMLElement;
+// 			constructor(...args: any[]) {
+// 				super(...args);
+// 				this.parent = document.getElementById(config.parent)!;
+// 				this.element = document.createElement(config.template);
+
+// 				this.element.innerHTML = this.content;
+// 				this.parent.appendChild(this.element)
+// 			}
+// 		};
+
+// 	};
+// }
+
+// @ControllerDecoration({
+// 	parent: "app",
+// 	template: "H1",
+// })
+// class Controller {
+// 	public content = "My controller";
+// }
+
+// const controller1 = new Controller();
+// const controller2 = new Controller();
+// const controller3 = new Controller();
+
+function ShowParams(target: any, name: string, descriptor: PropertyDescriptor) {
+	console.log("target", target);
+	console.log("name", name);
+	console.log("descriptor", descriptor);
 }
 
-function ControllerDecoration(config: IDecoration) {
-	return function <T extends { new (...args: any[]): { content: string } }>(
-		originalConstructor: T
-	) {
-		return class extends originalConstructor {
-			private element: HTMLElement;
-			private parent: HTMLElement;
-			constructor(...arg: any[]) {
-				super(...arg);
-				this.parent = document.getElementById(config.parent)!;
-				this.element = document.createElement(config.template);
-
-				this.element.innerHTML = this.content;
-
-				this.parent.appendChild(this.element);
-			}
-		};
-	};
+class Notifier {
+	public content = "Message in class";
+	@ShowParams
+	showMessage() {
+		// console.log("Show Message");
+		console.log(this.content);
+	}
 }
 
-@ControllerDecoration({
-	parent: "app",
-	template: "H1",
-})
-class Controller {
-	public content = "My custom controller";
-}
-
-const controller = new Controller();
-
+const notifier = new Notifier();
+const showMessage = notifier.showMessage;
+notifier.showMessage();
+showMessage();
