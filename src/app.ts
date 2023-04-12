@@ -437,6 +437,9 @@ function ShowParams(target: any, name: string, descriptor: PropertyDescriptor) {
 	console.log("descriptor", descriptor);
 }
 
+
+
+
 class Notifier {
 	public content = "Message in class";
 	@ShowParams
